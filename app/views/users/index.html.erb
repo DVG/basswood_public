@@ -1,0 +1,21 @@
+<div class="page-header"><h1>Gym Members</h1></div>
+<table class="table table-bordered table-striped" id="memberlist">
+	<thead>
+		<tr>
+			<th>Member</th>
+			<th>Workouts</th>
+			<th>Member Since</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @users.each do |user| %>
+			<% if !user.hide_me? || current_user.admin? || current_user.trainer? %>
+				<%= content_tag_for(:tr, user, :class => 'memberlist_row') do %>
+					<td><%= image_tag user.avatar.url(:tiny), id: 'memberlist_avatar' if user.avatar? %> <%= link_to user.full_name, user_path(user) %></td>
+					<td><%= user.workouts.count %></td>
+					<td><%= time_ago_in_words(user.created_at.to_date)+" ago" %>
+				<% end%>
+			<% end %>
+		<% end %>
+	</tbody>
+</table>

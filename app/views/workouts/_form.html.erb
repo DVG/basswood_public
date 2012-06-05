@@ -1,0 +1,17 @@
+<%= simple_form_for @workout, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :name %>
+  <%= f.input :date, :as => :hidden %>
+  <%= f.input :show_date, :as => :date_picker, :label => 'Date' %>
+	<%= f.input :time, :minute_step => 15 %>
+	<% if current_user.admin? %>
+		<%= f.association :trainer, :include_blank => false, :collection => User.trainers, :label_method => lambda { |trainer| trainer.full_name} %>
+	<% else %>
+		<%= f.association :trainer, :include_blank => false, :collection => [current_user], :label_method => lambda { |trainer| trainer.full_name} %>
+	<% end %>
+	<%= f.input :maximum_size, :label => 'Capacity', :hint => 'Enter 0 to give the workout unlimited capacity!', :as => :string %>
+	<div class="form-actions">
+    <%= f.button :submit, :class => 'btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                workouts_path, :class => 'btn' %>
+  </div>
+<% end %>

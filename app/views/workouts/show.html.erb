@@ -1,0 +1,40 @@
+<%- model_class = @workout.class -%>
+<legend><h1><%= @workout.name %></h1></legend>
+<legend><h3>Workout Information</h3></legend>
+<p>
+	<strong>Date: </strong> <%= @workout.date.strftime('%d/%m/%Y') %><br />
+	<strong>Time: </strong><%= @workout.time.strftime('%I:%M %P') %><br />
+</p>
+<legend><h3>Participants</h3></legend>
+<table class="table table-bordered table-condensed table-striped">
+	<tbody id="trainer_body">
+		<tr>
+			<th>Trainer</th>
+		</tr>
+		<tr>
+			<td><%= @workout.trainer.full_name %></td>
+		</tr>
+	</tbody>
+	<tbody id="participant_body">
+		<tr>
+			<th>Participants</th>
+		</tr>
+		<% @workout.users.each do |user| %>
+			<%= content_tag_for(:tr, user) do %>
+				<td><%= user.full_name %></td>
+			<% end %>
+		<% end %>
+	</tbody>
+</table>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              workouts_path, :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_workout_path(@workout), :class => 'btn' if permitted_to? :update, @workout %>
+  <%= link_to 'Cancel Workout',
+              workout_path(@workout),
+              :method => 'delete',
+              :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')),
+              :class => 'btn btn-danger' if permitted_to? :destroy, @workout %>
+</div>

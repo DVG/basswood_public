@@ -1,0 +1,21 @@
+<legend><h1><%= @user.full_name %></h1></legend>
+
+<%= simple_form_for(@user, :html => { :class => 'form-horizontal', :method => :put }) do |f| %>
+  <%= f.error_notification %>
+	 <%= f.input :full_name %>
+   <%= f.input :email, :required => true, :autofocus => true %>
+	 <%= f.input :avatar, :as => :avatar %>
+	 <%= f.input :favorite_workout, :label => 'Favorite Workout' %>
+	 <%= f.input :bio, :label => 'About Me' %>
+	 <%= f.input :hide_me, :label => 'Hide me in the members list', :hint => 'Other users will not be able to see you in the members list' %>
+	<% if current_user.admin? %>
+	  <%= f.association :role, :label_method => lambda { |role| role.name.capitalize }, :include_blank => false %>
+	<% end %>
+ 	<div class="form-actions">
+   	<%= f.button :submit, "Update" %>
+ 	</div>
+<% end %>
+
+<h3>Cancel my account</h3>
+
+<p>Unhappy? <%= link_to "Cancel my account", registration_path(@user), :confirm => "Are you sure?", :method => :delete %>.</p>

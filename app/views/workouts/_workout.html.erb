@@ -1,0 +1,25 @@
+<%= content_tag_for(:tr, workout, :class => 'workout_row') do %>
+  <td><%= link_to workout.name, workout_path(workout) %></td>
+	<td><%= workout.time ? workout.time.strftime('%l:%M %P') : '' %></td>
+	<td><%= workout.trainer.full_name %></td>
+	<td><%= workout.slots_remaining.nil? ? 'Unlimited' :  workout.slots_remaining %></td>
+  <td>
+	<div class="pull-right">
+		<% if workout.users.include? current_user %>
+			<%= link_to 'Wuss Out', cancel_workout_path(workout), :class => 'btn btn-mini btn-danger', :method => :post if permitted_to? :participate, workout%>
+    <% else %>
+			<% if workout.at_capacity? %>
+				<%= link_to 'Join In', '', :class => 'btn btn-mini disabled', :method => :post if permitted_to? :participate, workout %>
+			<% else %>
+				<%= link_to 'Join In', join_workout_path(workout), :class => 'btn btn-mini', :method => :post if permitted_to? :participate, workout %>
+			<% end %>
+		<% end %>
+		<%= link_to 'Edit', edit_workout_path(workout), :class => 'btn btn-mini' if permitted_to? :update, workout %>
+    <%= link_to 'Cancel', workout_path(workout),
+                :method => :delete,
+                :confirm => t('.confirm', :default => t("helpers.links.confirm", :default =>  'Are you sure?')),
+                :class => 'btn btn-mini btn-danger',
+								:remote => true if permitted_to? :update, workout  %>
+  </div>
+	</td>
+<% end %>

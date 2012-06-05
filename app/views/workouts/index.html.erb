@@ -1,0 +1,58 @@
+<%- model_class = Workout.new.class -%>
+<legend><h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1></legend>
+<% if permitted_to? :create, Workout.new %>
+<div class="pull-left">
+	<%= link_to new_workout_path, :class => 'btn btn-primary' do %>
+		<i class="icon-plus icon-white"></i> New Workout
+	<% end%>	
+</div>
+<% end %>
+<div class="pull-right">
+<ul class="pager">
+  <li>
+    <%= link_to "Previous Week", workouts_date_path(@week.first.prev_week(:sunday)) %>
+  </li>
+  <li>
+    <%= link_to "Next Week", workouts_date_path(@week.first.next_week(:sunday)) %>
+  </li>
+</ul>
+</div>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Name</th>
+			<th>Time</th>
+			<th>Trainer</th>
+			<th>Slots Open</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+	<% @week.each do |day| %>
+	<%= "<tbody id='#{day.strftime('day_%Y-%m-%d')}'>".html_safe %>
+		<tr>
+			<th colspan=5><%= day.strftime('%A, %B %e, %Y')%>
+			<div class="pull-right">
+				<% if permitted_to? :create, Workout.new %>
+					<div class='btn-group'>
+					<a class="btn dropdown-toggle btn-mini btn-success" data-toggle="dropdown" href="#">
+						<i class="icon-plus icon-white"></i> Quick Add
+						    <span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+						    <li><%= link_to 'Morning Workout', quick_add_workouts_path(:date => day.strftime('%Y-%m-%d'), :timeslot => 'morning'), :method => :post %></li>
+								<li><%= link_to 'Noon Workout', quick_add_workouts_path(:date => day.strftime('%Y-%m-%d'), :timeslot => 'noon'), :method => :post %></li>
+								<li><%= link_to 'Evening Workout', quick_add_workouts_path(:date => day.strftime('%Y-%m-%d'), :timeslot => 'evening'), :method => :post %></li>
+						</ul>
+				</div>
+			<% end %>
+			</div>
+			</th>
+		</tr>
+		<% unless @workouts[day].nil? then %>
+			<% @workouts[day].each do |workout| %>
+				<%= render :partial => 'workout', :locals => {:workout => workout} %>
+			<% end %>
+		<% end %>
+		</tbody>
+	<% end %>
+</table>

@@ -1,0 +1,14 @@
+<div class="page-header">
+	<div class="row">
+		<% if @user.avatar? %>
+			<div class="span1"><%= image_tag @user.avatar.url(:thumb), :class => 'thumbnail', id: 'avatar' %></div>
+			<div class="span8"><h1><%= @user.full_name %>'s Profile</h1></div>
+		<% else %>
+	  	<div class="span8"><h1><%= @user.full_name %>'s Profile</h1></div>
+		<% end %>
+	</div><!-- /row -->
+</div><!-- /page-header -->
+<div class="page-header"><h3>Favorite Workout</h3></div>
+<%= @user.favorite_workout %>
+<div class="page-header"><h3>About Me</h3></div>
+<%= @user.bio %>
